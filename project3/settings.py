@@ -120,3 +120,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+CORS_ORIGIN_WHITELIST = [
+    'https://sturdy-funicular-ppqg6xgqq7v29qv-8000.app.github.dev',
+    'https://localhost:8000'
+]
+CSRF_TRUSTED_ORIGINS = [
+    'https://sturdy-funicular-ppqg6xgqq7v29qv-8000.app.github.dev',
+    'https://localhost:8000'
+]
+
+CORS_ALLOW_CREDENTIALS = True

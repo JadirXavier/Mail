@@ -23,6 +23,13 @@ function compose_email() {
 }
 
 function load_mailbox(mailbox) {
+  fetch(`/emails/${mailbox}`)
+  .then(response => response.json())
+  .then(emails => {
+    // Print emails
+    console.log(emails);
+  });
+
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
@@ -33,7 +40,6 @@ function load_mailbox(mailbox) {
 
 function send_email(event) {
   event.preventDefault();
-  console.log(document.querySelector('#compose-recipients').value)
 
   fetch('/emails', {
     method: 'POST',
@@ -45,8 +51,9 @@ function send_email(event) {
   })
   .then(response => response.json())
   .then(result => {
-      // Print result
-      console.log(result);
-      
+      if(!result.error) {
+        load_mailbox('sent')
+        console.log(result);
+      }
   });
 }

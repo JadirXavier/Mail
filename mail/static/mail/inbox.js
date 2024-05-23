@@ -26,8 +26,26 @@ function load_mailbox(mailbox) {
   fetch(`/emails/${mailbox}`)
   .then(response => response.json())
   .then(emails => {
-    // Print emails
-    console.log(emails);
+    console.log(emails)
+    emails.forEach(email => {
+      const email_element = document.createElement('div');
+      email_element.innerHTML = `
+        <div class="card container">
+          <div class="row">
+            <div class="card-body col-sm-2">
+              ${email.sender}
+            </div>
+            <div class="card-body col-sm-8">
+              ${email.subject}
+            </div>
+            <div class="card-body col-sm-2">
+              ${email.timestamp}
+            </div>
+          </div>
+        </div>
+        `
+      document.querySelector('#emails-view').append(email_element);
+    });
   });
 
   // Show the mailbox and hide other views

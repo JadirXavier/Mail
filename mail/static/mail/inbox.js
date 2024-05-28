@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
   document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
   document.querySelector('#compose').addEventListener('click', compose_email);
-
   document.querySelector('#compose-form').addEventListener('submit', send_email);
 
   // By default, load the inbox
@@ -109,7 +108,10 @@ function view_email(id) {
         <p><strong>To:</strong> ${email.recipients}</p>
         <p><strong>Subject:</strong> ${email.subject}</p>
         <p><strong>Timestamp:</strong> ${email.timestamp}</p>
-        <a href="#" class="btn btn-sm btn-outline-primary">Reply</a>
+        <div class="d-flex flex-row" >
+          <button class="btn btn-sm btn-outline-primary me-1" id="reply">Reply</button>
+          <button class="btn btn-sm btn-outline-primary ms-1" id="archive"></button>
+        </div>
       </div>
       <div class="card-body">
         <p class="card-text">${email.body}</p>
@@ -127,7 +129,34 @@ function view_email(id) {
     }
 
     document.querySelector('#content-view').append(content_element);
-  });
 
- 
+    if(!email.archived) {
+      document.querySelector('#archive').innerHTML = "Archive"
+    } else {
+      document.querySelector('#archive').innerHTML = "Unarchive"
+    }
+
+    document.querySelector('#archive').addEventListener('click', () => {
+      fetch(`/emails/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+            archived: !email.archived
+        })
+      })
+      .then(() => {load_mailbox('inbox')})
+    })
+
+    document.querySelector('#reply').addEventListener('click', () => {
+      compose_email()
+
+      document.querySelector('#compose-recipients').value = email.sender;
+      if (email.subject.startsWith("Re:")) {
+        document.querySelector('#compose-subject').value = `${email.subject}`;
+      } else {
+        document.querySelector('#compose-subject').value = `Re: ${email.subject}`;
+      }
+      document.querySelector('#compose-body').value = `On ${email.timestamp} ${email.sender} wrote: \n ${email.body}`;
+    })
+  });
+  
 }

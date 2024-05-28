@@ -29,7 +29,6 @@ function load_mailbox(mailbox) {
   .then(emails => {
     console.log(emails);
 
-    document.querySelector('#emails-view').innerHTML = '';
 
     emails.forEach(email => {
       const email_element = document.createElement('div');
